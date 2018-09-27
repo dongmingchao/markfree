@@ -9,11 +9,14 @@
 
     export default {
         name: "single-area",
-        data: () => ({
-            textarea: '',
-            text: '',
-            textbox: false
-        }),
+        data(){
+        	return{
+		        text: '',
+		        textbox: false,
+                nowInput: null
+            }
+
+        },
         methods: {
             showinput() {
                 this.textbox = true;
@@ -21,66 +24,70 @@
             },
             pressBackSpace() {
                 let pressTarget = window.getSelection().focusNode;
+	            console.log('parent',pressTarget.parentElement);
                 if (!pressTarget.nodeValue) {
                     pressTarget.parentElement.removeChild(pressTarget);
                     this.$nextTick(() => this.$refs.inputbox.focus());
                 }
+            },
+            handleEachKey(key){
+	            let editor = this.$refs.editor;
+	            // let input = this.$refs.inputbox;
+
+	            let chs = this.nowInput.innerHTML;
+	            console.log(key);
+	            if ((key.keyCode > 47 && key.keyCode < 58) ||
+		            (key.keyCode > 64 && key.keyCode < 91) ||
+		            (key.keyCode > 95 && key.keyCode < 108) ||
+		            (key.keyCode > 108 && key.keyCode < 112) ||
+		            (key.keyCode > 185 && key.keyCode < 223)
+	            ) chs += key.key;
+	            if (key.key === 'Enter') chs += '\n';
+	            if (key.key === 'Backspace') this.pressBackSpace();
+	            console.log(chs);
+	            for (let each of Mnode.parse(chs)) {
+		            console.log(each.toHTML());
+	            }
+	            let got = Mnode.arrayToHTML(Mnode.parse(chs));
+	            if (got) {
+		            got.onkeydown = this.handleEachKey;
+		            editor.insertBefore(got, this.nowInput);
+		            setTimeout(() => this.nowInput.innerHTML = '', 1);
+	            }
+	            // let reg = judgeReg(chs,matchMap);
+	            // if(reg) {
+	            //     let generateDom = matchMap[reg.index].node(chs);
+	            //     if (generateDom) editor.insertBefore(generateDom, input);
+	            // }
+	            //
+	            // let regobtain = chs.match(/#+ .+\n/g);
+	            // if (regobtain) {
+	            //     let matcharray = regobtain[0].split(/\s/g);
+	            //     let headlevel = matcharray[0].length;
+	            //     if (headlevel > 5) headlevel = 5;
+	            //     if (headlevel < 1) headlevel = 1;
+	            //     editor.insertBefore(createNode(document.createElement('div'), chs), input);
+	            //     setTimeout(() => input.innerHTML = '', 1);
+	            // } else {
+	            //     regobtain = chs.match(/\*.+\*/g);
+	            //     if (regobtain) {
+	            //         console.log(regobtain);
+	            //         let matcharray = regobtain[0].split(/\*/g);
+	            //         let headlevel = matcharray.length;
+	            //         if (matcharray[1] === '') {
+	            //             editor.insertBefore(createNode('strong', matcharray[2]), input);
+	            //         } else {
+	            //             editor.insertBefore(createNode('em', matcharray[1]), input);
+	            //         }
+	            //         setTimeout(() => input.innerHTML = '', 1);
+	            //     }
+	            // }
             }
         },
         mounted() {
             let editor = this.$refs.editor;
-            let input = this.$refs.inputbox;
-            input.onkeydown = (key) => {
-                let chs = input.innerHTML;
-                console.log(key);
-                if ((key.keyCode > 47 && key.keyCode < 58) ||
-                    (key.keyCode > 64 && key.keyCode < 91) ||
-                    (key.keyCode > 95 && key.keyCode < 108) ||
-                    (key.keyCode > 108 && key.keyCode < 112) ||
-                    (key.keyCode > 185 && key.keyCode < 223)
-                ) chs += key.key;
-                if (key.key === 'Enter') chs += '\n';
-                console.log(chs);
-                for (let each of Mnode.parse(chs)) {
-                    console.log(each.toHTML());
-                }
-                let got = Mnode.arrayToHTML(Mnode.parse(chs));
-                if (got) {
-                    got.onkeydown = (key) => {
-                        if (key.key === 'Backspace') this.pressBackSpace();
-                    };
-                    editor.insertBefore(got, input);
-                    setTimeout(() => input.innerHTML = '', 1);
-                }
-                // let reg = judgeReg(chs,matchMap);
-                // if(reg) {
-                //     let generateDom = matchMap[reg.index].node(chs);
-                //     if (generateDom) editor.insertBefore(generateDom, input);
-                // }
-                //
-                // let regobtain = chs.match(/#+ .+\n/g);
-                // if (regobtain) {
-                //     let matcharray = regobtain[0].split(/\s/g);
-                //     let headlevel = matcharray[0].length;
-                //     if (headlevel > 5) headlevel = 5;
-                //     if (headlevel < 1) headlevel = 1;
-                //     editor.insertBefore(createNode(document.createElement('div'), chs), input);
-                //     setTimeout(() => input.innerHTML = '', 1);
-                // } else {
-                //     regobtain = chs.match(/\*.+\*/g);
-                //     if (regobtain) {
-                //         console.log(regobtain);
-                //         let matcharray = regobtain[0].split(/\*/g);
-                //         let headlevel = matcharray.length;
-                //         if (matcharray[1] === '') {
-                //             editor.insertBefore(createNode('strong', matcharray[2]), input);
-                //         } else {
-                //             editor.insertBefore(createNode('em', matcharray[1]), input);
-                //         }
-                //         setTimeout(() => input.innerHTML = '', 1);
-                //     }
-                // }
-            };
+            this.nowInput = this.$refs.inputbox;
+	        this.nowInput.onkeydown = this.handleEachKey;
         }
     }
 
