@@ -1,0 +1,32 @@
+{
+  "content": {
+    "1": "文章标题",
+    "2": "支持",
+    "3": "不支持",
+    "4": {
+      "tag": "table",
+      "title": [
+        ["是否支持table", {
+          "content": 2
+        }],
+        ["是否支持s", {
+          "content": 3
+        }]
+      ]
+    },
+    "5": {
+      "title": "文章内容",
+      "tag": "h3",
+      "children": [{
+        "content": 4
+      }]
+    }
+  },
+  "children": [{
+    "title": "文章大标题",
+    "tag": "h2",
+    "children": [{
+      "content": 5
+    }]
+  }]
+}
