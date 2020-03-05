@@ -1,5 +1,6 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
 	entry: './src/main.js',
@@ -24,11 +25,11 @@ module.exports = {
 					// other vue-loader options go here
 				}
 			},
-			{
-				test: /\.js$/,
-				loader: 'babel-loader',
-				exclude: /node_modules/
-			},
+			// {
+			// 	test: /\.js$/,
+			// 	loader: 'babel-loader',
+			// 	exclude: /node_modules/
+			// },
 			{
 				test: /\.(png|jpg|gif|svg)$/,
 				loader: 'file-loader',
@@ -52,6 +53,9 @@ module.exports = {
 	performance: {
 		hints: false
 	},
+  plugins: [
+    new VueLoaderPlugin()
+  ],
 	devtool: '#eval-source-map'
 };
 
