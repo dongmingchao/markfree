@@ -55,8 +55,9 @@ export default {
         return;
       }
       if (!pressTarget.nodeValue) {
-        pressTarget.parentElement.removeChild(pressTarget);
-        this.$nextTick(() => this.$refs.inputbox.focus());
+				pressTarget.parentElement.removeChild(pressTarget);
+				this.nowInput = this.$refs.inputbox;
+        // this.$nextTick(() => this.$refs.inputbox.focus());
       }
     },
     handleEachKey(key) {
@@ -125,61 +126,61 @@ export default {
   mounted() {}
 };
 
-const matchMap = [
-  {
-    index: 0,
-    regexp: /#+ .+\n/g,
-    tag: function(regBack) {
-      let matcharray = regBack.split(/\s/g);
-      let headlevel = matcharray[0].length;
-      if (headlevel > 5) headlevel = 5;
-      if (headlevel < 1) headlevel = 1;
-      return "h" + headlevel.toString();
-    }
-  }
-];
+// const matchMap = [
+//   {
+//     index: 0,
+//     regexp: /#+ .+\n/g,
+//     tag: function(regBack) {
+//       let matcharray = regBack.split(/\s/g);
+//       let headlevel = matcharray[0].length;
+//       if (headlevel > 5) headlevel = 5;
+//       if (headlevel < 1) headlevel = 1;
+//       return "h" + headlevel.toString();
+//     }
+//   }
+// ];
 
-function createNode(inner) {
-  //# aaa
-  let node = null;
-  let reg = judgeReg(inner, matchMap);
-  if (reg) {
-    let oGroup = inner.split(reg.regexp); //''
-    let mGroup = inner.match(reg.regexp); //# aaa
-    node = document.createElement(matchMap[reg.index].tag(inner));
-    let maxlength =
-      oGroup.length > mGroup.length ? oGroup.length : mGroup.length;
-    for (let i = 0; i < maxlength; i++) {
-      if (oGroup[i]) node.innerHTML += oGroup[i];
-      if (mGroup[i]) node.appendChild(createNode(mGroup[i]));
-    }
-  }
-  return node;
-}
+// function createNode(inner) {
+//   //# aaa
+//   let node = null;
+//   let reg = judgeReg(inner, matchMap);
+//   if (reg) {
+//     let oGroup = inner.split(reg.regexp); //''
+//     let mGroup = inner.match(reg.regexp); //# aaa
+//     node = document.createElement(matchMap[reg.index].tag(inner));
+//     let maxlength =
+//       oGroup.length > mGroup.length ? oGroup.length : mGroup.length;
+//     for (let i = 0; i < maxlength; i++) {
+//       if (oGroup[i]) node.innerHTML += oGroup[i];
+//       if (mGroup[i]) node.appendChild(createNode(mGroup[i]));
+//     }
+//   }
+//   return node;
+// }
 
-function judgeReg(str, matchMap) {
-  for (let { regexp, index } of matchMap) {
-    let handler = str.match(regexp);
-    if (handler)
-      return {
-        regexp,
-        index
-      };
-  }
-  return null;
-}
+// function judgeReg(str, matchMap) {
+//   for (let { regexp, index } of matchMap) {
+//     let handler = str.match(regexp);
+//     if (handler)
+//       return {
+//         regexp,
+//         index
+//       };
+//   }
+//   return null;
+// }
 
-/**
- * 处理各种正则匹配
- * @param {String} str
- * @param {{RegExp regexp,Function method}[]} matchObj
- * @param {HTMLElement} rootDom
- * @return {HTMLElement} endDom
- */
-function handleReg(str, matchObj, rootDom) {
-  let reststr = method(handler);
-  let endDom = handleReg(reststr[1], matchObj, null);
-}
+// /**
+//  * 处理各种正则匹配
+//  * @param {String} str
+//  * @param {{RegExp regexp,Function method}[]} matchObj
+//  * @param {HTMLElement} rootDom
+//  * @return {HTMLElement} endDom
+//  */
+// function handleReg(str, matchObj, rootDom) {
+//   let reststr = method(handler);
+//   let endDom = handleReg(reststr[1], matchObj, null);
+// }
 </script>
 
 <style scoped>
