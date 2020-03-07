@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const PnpWebpackPlugin = require('pnp-webpack-plugin')
 
 module.exports = {
 	entry: './src/main.js',
@@ -43,8 +44,12 @@ module.exports = {
 		alias: {
 			'vue$': 'vue/dist/vue.esm.js'
 		},
+		plugins: [PnpWebpackPlugin],
 		extensions: ['*', '.js', '.vue', '.json']
 	},
+	resolveLoader: {
+    plugins: [PnpWebpackPlugin.moduleLoader(module)],
+  },
 	devServer: {
 		historyApiFallback: true,
 		noInfo: true,
